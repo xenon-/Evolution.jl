@@ -2,21 +2,21 @@ module Evolution
 
 import Base: shuffle!, getindex
 
-include("genotype.jl")
+include("genome.jl")
 include("phenotype.jl")
 
 export
 
-    AbstractGenotype,
+    AbstractGenome,
 
-    ArraylikeGenotype,
+    ArraylikeGenome,
     randmutate!,
     randswap,
     randswap!,
     randcrossover,
 
     AbstractPhenotype,
-    genotype,
+    genome,
     fitness,
     best,
     worst

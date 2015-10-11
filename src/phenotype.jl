@@ -1,6 +1,6 @@
-abstract AbstractPhenotype{G<:AbstractGenotype}
+abstract AbstractPhenotype{G<:AbstractGenome}
 
-genotype(pt::AbstractPhenotype) = error()
+genome(pt::AbstractPhenotype) = error()
 fitness(pt::AbstractPhenotype) = error()
 randcrossover{T<:AbstractPhenotype}(gt1::T, gt2::T) = T(randcrossover(genotype(gt1), genotype(gt2)))
 
