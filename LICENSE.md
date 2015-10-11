@@ -1,6 +1,6 @@
 The Evolution.jl package is licensed under the MIT "Expat" License:
 
-> Copyright (c) 2015: Christof Stocker.
+> Copyright (c) 2015: David Blanchard and Christof Stocker.
 >
 > Permission is hereby granted, free of charge, to any person obtaining
 > a copy of this software and associated documentation files (the

@@ -1,3 +1,3 @@
 # Evolution
 
-[![Build Status](https://travis-ci.org/Evizero/Evolution.jl.svg?branch=master)](https://travis-ci.org/Evizero/Evolution.jl)
+[![Build Status](https://travis-ci.org/xenon-/Evolution.jl.svg?branch=master)](https://travis-ci.org/xenon-/Evolution.jl)
