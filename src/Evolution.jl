@@ -5,7 +5,14 @@ import Base: shuffle!, getindex
 include("genome.jl")
 include("phenotype.jl")
 
+function pmap!(func, array)
+    buffer = pmap(func, array)
+    copy!(array, buffer)
+end
+
 export
+
+    pmap!,
 
     AbstractGenome,
 
@@ -17,8 +24,14 @@ export
 
     AbstractPhenotype,
     genome,
+    fitness!,
     fitness,
     best,
-    worst
+    worst,
+    
+    elitecrossover!,
+    elitemutate!,
+
+    MinimizerPhenotype
 
 end # module
