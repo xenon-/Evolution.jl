@@ -9,15 +9,15 @@ end
 
 history = VectorUnivalueHistory(Float64)
 
-population = [MinimizerPhenotype(rand(2) * 50, rosenbrock) for i = 1:1000]
-for i = 1:20
+population = [MinimizerPhenotype(rand(2) * 30, rosenbrock) for i = 1:1000]
+for i = 1:30
     map!(fitness!, population)
-    elitemutate!(population, percent = 10)
-    elitecrossover!(population, percent = 20)
+    mutate!(population, Elitism(RandomNormal(), 0.1))
+    crossover!(population, Elitism(Random(), 0.2))
 
     push!(history, i, fitness(best(population)))
 end
 
 solution = best(population)
 println(solution)
-print(lineplot(get(history)..., title = "Fitness over generation"))
+print(lineplot(get(history)..., height = 10, title = "Best Fitness over Generations"))

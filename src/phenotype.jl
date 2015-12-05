@@ -2,31 +2,29 @@ abstract AbstractPhenotype{G <: AbstractGenome}
 
 genome(pt::AbstractPhenotype) = error()
 fitness(pt::AbstractPhenotype) = error()
-randcrossover{T<:AbstractPhenotype}(gt1::T, gt2::T) = T(randcrossover(genome(gt1), genome(gt2)))
+crossover{T<:AbstractPhenotype}(gt1::T, gt2::T, o) = T(gt1, crossover(genome(gt1), genome(gt2), o))
 
-function elitemutate!{T<:AbstractPhenotype}(
-        pop::AbstractVector{T};
-        percent = 10,
-        fun! = randnmutate!)
+function mutate!{T<:AbstractPhenotype}(
+        pop::AbstractVector{T},
+        o::Elitism)
     sort!(pop, rev = true)
-    n_top = floor(Int, percent/100 * length(pop))
+    n_top = floor(Int, o.fraction * length(pop))
     @inbounds for i = (n_top+1):length(pop)
         gt = genome(pop[i])
-        fun!(gt)
+        mutate!(gt, o.kind)
     end
     pop
 end
 
-function elitecrossover!{T<:AbstractPhenotype}(
-        pop::AbstractVector{T};
-        percent = 10,
-        fun = randcrossover)
+function crossover!{T<:AbstractPhenotype}(
+        pop::AbstractVector{T},
+        o::Elitism)
     sort!(pop, rev = true)
-    n_top = floor(Int, percent/100 * length(pop))
+    n_top = floor(Int, o.fraction * length(pop))
     @inbounds for i = (n_top+1):length(pop)
         i1 = rand(1:n_top)
         i2 = rand(1:n_top)
-        pop[i] = T(pop[i], fun(genome(pop[i1]), genome(pop[i2])))
+        pop[i] = crossover(pop[i1], pop[i2], o.kind)
     end
     pop
 end
@@ -55,53 +53,4 @@ function best{T<:AbstractPhenotype}(pop::AbstractVector{T})
         end
     end
     best_pt
-end
-
-
-type MinimizerPhenotype{G<:ArrayGenome} <: AbstractPhenotype{G}
-    genome::G
-    costfunction::Function
-    fitness::Nullable{Float64}
-
-    function MinimizerPhenotype(prototype::MinimizerPhenotype{G}, genome::G)
-        new(genome, prototype.costfunction, Nullable{Float64}())
-    end
-
-    function MinimizerPhenotype(
-            genome::G,
-            costfunction::Function,
-            fitness::Nullable{Float64} = Nullable{Float64}())
-        new(genome, costfunction, fitness)
-    end
-end
-
-function MinimizerPhenotype{G<:ArrayGenome}(genome::G, costfunction::Function)
-    MinimizerPhenotype{G}(genome, costfunction)
-end
-
-function MinimizerPhenotype{TArray<:Array}(array::TArray, costfunction::Function)
-    MinimizerPhenotype(ArrayGenome(array), costfunction)
-end
-
-function Base.show(io::IO, pt::MinimizerPhenotype)
-    print(io, "MinimizerPhenotype(")
-    if pt.fitness.isnull
-        print(io, "null")
-    else
-        print(io, round(get(pt.fitness), 5))
-    end
-    print(io, ") with ", pt.genome)
-end
-
-for op = (:<, :>, :(==), :(!=), :(<=), :(>=), :isless)
-    @eval Base.$op(pt1::MinimizerPhenotype, pt2::MinimizerPhenotype) = Base.$op(fitness(pt1), fitness(pt2))
-end
-
-genome(pt::MinimizerPhenotype) = pt.genome
-fitness(pt::MinimizerPhenotype) = get(pt.fitness, typemin(eltype(pt.fitness)))
-function fitness!(pt::MinimizerPhenotype)
-    if pt.fitness.isnull
-        pt.fitness = Nullable(Float64(-pt.costfunction(pt.genome.array)))
-    end
-    pt
 end
