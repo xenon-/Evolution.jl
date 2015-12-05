@@ -9,9 +9,9 @@ export
 
     AbstractGenome,
 
-    ArraylikeGenome,
-    randmutate!,
-    randswap,
+    IndexableGenome,
+    ArrayGenome,
+    randnmutate!,
     randswap!,
     randcrossover,
 
