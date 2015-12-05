@@ -2,16 +2,12 @@ module Evolution
 
 import Base: shuffle!, getindex
 
+include("common.jl")
 include("types.jl")
 include("genome.jl")
 include("phenotype.jl")
 include("genomes/arraygenome.jl")
 include("phenotypes/minimizer.jl")
-
-function pmap!(func, array)
-    buffer = pmap(func, array)
-    copy!(array, buffer)
-end
 
 export
 
@@ -22,12 +18,8 @@ export
     pmap!,
 
     AbstractGenome,
-
     IndexableGenome,
-    ArrayGenome,
-    mutate!,
     randswap!,
-    crossover,
 
     AbstractPhenotype,
     genome,
@@ -36,9 +28,11 @@ export
     best,
     worst,
 
+    crossover,
     crossover!,
     mutate!,
 
+    ArrayGenome,
     MinimizerPhenotype
 
 end # module
