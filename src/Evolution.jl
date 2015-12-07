@@ -1,6 +1,7 @@
 module Evolution
 
 import Base: shuffle!, getindex
+using SimpleStructs
 
 include("common.jl")
 include("types.jl")
